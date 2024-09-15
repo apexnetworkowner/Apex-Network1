@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>APEX NETWORK</title>
+  <meta name="description" content="skibdi." />
+  <meta content='apex.png' property='og:image'>
+  <meta name="theme-color" content="#6853f">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" />
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background: linear-gradient(to bottom, #660033, #330033);
+      font-family: 'Vietnam Pro'; /* changed font family to Vietnam Pro */
+    }
+    #canvas {
+      width: 100%;
+      height: 100vh;
+      display: block;
+    }
+    .navbar {
+      position: absolute;
+      top: 20px; /* increased margin from top */
+      left: 0;
+      width: 100%;
+      height: 60px;
+      margin: 0;
+      padding: 0;
+      align-items: center;
+      justify-content: center;
+      display: flex;
+      background-color: rgba(255, 0, 0, 0.5); /* changed to semi-transparent neon red */
+      border-radius: 20px; /* increased border radius */
+      box-shadow: 0px 0px 10px rgba(255, 0, 0, 0.8); /* added neon red shadow */
+    }
+    .logo {
+      width: 40px; 
+      height: 40px;
+      margin-left: 20px;
+      border-radius: 10px;
+    }
+    .logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 10px;
+    }
+    .nav-options {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-left: 50px;
+    }
+    .nav-option {
+      vertical-align: middle;
+      float: left;
+      font-size: 20px;
+      font-family: 'Vietnam Pro'; /* changed font family to Vietnam Pro */
+      text-decoration: none;
+      color: rgb(255, 0, 0);
+      margin-right: 50px;
+      transition: all 0.3s ease-in-out;
+      border-radius: 10px; /* increased border radius */
+      padding: 10px;
+      background-color: rgba(255, 0, 0, 0.2); /* added semi-transparent neon red background */
+    }
+    .nav-option:hover {
+      color: #ff3737;
+      text-shadow: 0px 0px 15px rgba(255, 55, 55, 0.8);
+      background-color: rgba(255, 55, 55, 0.4);
+      border-radius: 10px;
+      padding: 10px;
+      box-shadow: 0px 0px 10px rgba(255, 55, 55, 0.8);
+      /* added neon red highlight */
+      box-shadow: 0px 0px 10px rgba(255, 0, 0, 0.8);
+      background-image: linear-gradient(to bottom, rgba(255, 0, 0, 0.8), rgba(255, 55, 55, 0.8));
+    }
+    .nav-option:active {
+      color: #ff3737;
+      text-shadow: 0px 0px 15px rgba(255, 55, 55, 0.8);
+      background-color: rgba(255, 55, 55, 0.4);
+      border-radius: 10px;
+      padding: 10px;
+      box-shadow: 0px 0px 10px rgba(255, 55, 55, 0.8);
+    }
+    .nav-option.active {
+      color: #ff3737;
+      text-shadow: 0px 0px 15px rgba(255, 55, 55, 0.8);
+      background-color: rgba(255, 55, 55, 0.4);
+      border-radius: 10px;
+      padding: 10px;
+      box-shadow: 0px 0px 10px rgba(255, 55, 55, 0.8);
+    }
+    .header-container {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .header-text {
+      font-size: 100px;
+      font-family: 'Vietnam Pro'; /* changed font family to Vietnam Pro */
+      color: #000000;
+      margin-bottom: 20px;
+    }
+    .searchbox {
+      width: 400px;
+      height: 60px;
+      background: #FF000;
+      border-radius: 10px;
+      margin: auto;
+      border: 2px black solid;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .search {
+      width: 300px;
+      height: 57px;
+      border-radius: 10px;
+      background: transparent;
+      border: none;
+      color: red;
+      font-size: 18px;
+      outline: none;
+      margin-left: 10px;
+      font-family: 'Vietnam Pro'; /* changed font family to Vietnam Pro */
+    }
+    ::placeholder {
+      color: red;
+      font-size: 18px;
+      border: none;
+      font-family: 'Vietnam Pro'; /* changed font family to Vietnam Pro */
+    }
+    .submit-button {
+      background: transparent;
+      border: none;
+      width: 55px;
+      height: 60px;
+      color: red;
+      margin-left: 5px;
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <a href="home.html"><img src="apex.png" class="logo" alt="Apex Logo"></a>
+    <div class="nav-options">
+      <a href="/" class="nav-option"><i class="home-icon fa fa-house-user fa-2xl fa-fw"></i>Home</a>
+      <a href="/games.html" class="nav-option"><i class="games-icon fa fa-gamepad fa-2xl fa-fw"></i>Games</a>
+      <a href="/settings" class="nav-option"><i class="settings-icon fa fa-gear fa-2xl fa-fw"></i>Settings</a>
+      <a href="/chat" class="nav-option"><i class="chat-icon fa fa-message fa-2xl fa-fw"></i>Chat</a>
+            <a href="/movies" class="nav-option"><i class="movies-icon fa-solid fa-clapperboard fa-2xl fa-fw"></i>Movies</a>
+      <a href="/proxy" class="nav-option"><i class="search-icon fa-solid fa-magnifying-glass fa-2xl fa-fw"></i>Proxy</a>
+      <a href="/darkweb" class="nav-option"><i class="darkweb-icon fa-solid fa-lock fa-2xl fa-fw"></i>Darkweb</a>
+    </div>
+  </nav>
+  <div class="header-container">
+    <h1 class="header-text">APEX</h1>
+    <div class="searchbox">
+      <form>
+        <input type="search" class="search" placeholder="Search...">
+        <button type="submit" class="submit-button"><i class="fas fa-search searchicon"></i></button>
+      </form>
+    </div>
+  </div>
+  <canvas id="canvas"></canvas>
+  <script src="script.js"></script>
+</body>
+</html>
