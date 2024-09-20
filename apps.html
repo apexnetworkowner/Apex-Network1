@@ -92,6 +92,21 @@
       background-color: #e34a38;
     }
 
+    .fine-text {
+      margin-top: 30px;
+      font-size: 0.8rem;
+      color: #ffffffcc;
+    }
+
+    .fine-text a {
+      color: #ffffffcc;
+      text-decoration: none;
+    }
+
+    .fine-text a:hover {
+      text-decoration: underline;
+    }
+
     @keyframes rotateImage {
       0% {
         transform: rotate(0deg);
@@ -114,29 +129,33 @@
 <body>
   <h1>My Cool Apps</h1>
   <div class="container">
-    <!-- App Card 1 -->
+    <!-- App Card 1 (YouTube) -->
     <div class="app-card">
-      <img src="app-icon1.png" alt="App Icon">
-      <h2>App 1</h2>
-      <p>Some brief description about the app and its cool features.</p>
-      <button class="button">Open App</button>
+      <img src="https://yt3.googleusercontent.com/584JjRp5QMuKbyduM_2k5RlXFqHJtQ0qLIPZpwbUjMJmgzZngHcam5JMuZQxyzGMV5ljwJRl0Q=s900-c-k-c0x00ffffff-no-rj" alt="YouTube Icon">
+      <h2>YouTube</h2>
+      <p>Watch videos on YouTube.</p>
+      <button class="button" onclick="window.open('https://www.youtube.com', '_blank')">Open App</button>
     </div>
 
-    <!-- App Card 2 -->
+    <!-- App Card 2 (Twitch) -->
     <div class="app-card">
-      <img src="app-icon2.png" alt="App Icon">
-      <h2>App 2</h2>
-      <p>Some brief description about the app and its cool features.</p>
-      <button class="button">Open App</button>
+      <img src="https://m.media-amazon.com/images/I/21kRx-CJsUL.png" alt="Twitch Icon">
+      <h2>Twitch</h2>
+      <p>Watch live streams on Twitch.</p>
+      <button class="button" onclick="window.open('https://www.twitch.tv', '_blank')">Open App</button>
     </div>
 
-    <!-- App Card 3 -->
+    <!-- App Card 3 (Twitter) -->
     <div class="app-card">
-      <img src="app-icon3.png" alt="App Icon">
-      <h2>App 3</h2>
-      <p>Some brief description about the app and its cool features.</p>
-      <button class="button">Open App</button>
+      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTHyMrW6N9ciX7jJgCdTxZX342PdxDPrADdlA&s" alt="Twitter Icon">
+      <h2>Twitter</h2>
+      <p>Stay updated on Twitter (X).</p>
+      <button class="button" onclick="window.open('https://x.com', '_blank')">Open App</button>
     </div>
+  </div>
+
+  <div class="fine-text">
+    Helped by <a href="https://void.radio.am" target="_blank">https://void.radio.am</a>
   </div>
 </body>
 </html>
