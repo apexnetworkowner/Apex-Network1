@@ -7,166 +7,237 @@
   <meta name="description" content="skibdi." />
   <meta content='apex.png' property='og:image'>
   <meta name="theme-color" content="#6853f">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" />
   <style>
     body {
       margin: 0;
       padding: 0;
       overflow: hidden;
-      background: linear-gradient(to bottom, #660033, #330033);
+      background: linear-gradient(to bottom, #660000, #000000);
+      font-family: Helvetica, sans-serif;
     }
+    
     #canvas {
       width: 100%;
       height: 100vh;
       display: block;
     }
+    
     .navbar {
-      position: absolute;
-      top: 10px; /* added 10px margin from top */
+      position: fixed;
+      top: 0;
       left: 0;
-      width: 100%;
-      height: 60px;
-      margin: 0;
-      padding: 0;
+      width: 70px;
+      height: 100vh;
+      background-color: rgba(0, 0, 0, 0.8);
+      display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
+      transition: left 0.5s;
+    }
+    
+    .navbar.closed {
+      left: -70px;
+    }
+    
+    .navbar .nav-options {
       display: flex;
-      background-color: rgba(0, 0, 0, 0.5); /* changed to transparent black */
-      border-radius: 10px; /* added border radius */
-    }
-    .logo {
-      width: 40px; 
-      height: 40px;
-      margin-left: 20px;
-      border-radius: 10px;
-    }
-    .logo img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      border-radius: 10px;
-    }
-    .nav-options {
-      display: flex;
-      justify-content: center;
+      flex-direction: column;
       align-items: center;
-      margin-left: 50px;
+      justify-content: center;
     }
-    .nav-option {
+    
+    .nav-option, .nav-option_logo {
       vertical-align: middle;
-      float: left;
-      font-size: 20px;
-      font-family: 'Poppins';
+      font-family: 'Vietnam Pro';
       text-decoration: none;
-      color: rgb(255, 0, 0);
-      margin-right: 50px;
+      width: 100%;
+      height: max-content;
+      color: rgb(222, 222, 222);
+      margin-bottom: 20px;
       transition: all 0.3s ease-in-out;
-      border-radius: 5px; /* added border radius */
+      border-radius: 10px;
       padding: 10px;
+      animation: shrink 0.8s both;
     }
+    
+    .nav-option_logo { 
+      background-color: transparent;
+      border: 1px solid rgba(255, 0, 0, 0.5);
+      margin: 0 auto;
+    }
+    
     .nav-option:hover {
-      color: #ff3737;
-      text-shadow: 0px 0px 15px rgba(255, 55, 55, 0.8);
-      background-color: rgba(255, 55, 55, 0.2);
-      border-radius: 5px;
-      padding: 10px;
-      box-shadow: 0px 0px 10px rgba(255, 55, 55, 0.8);
-      /* added neon red highlight */
+      transition: transform 0.2s, box-shadow 0.2s;
+      transform: scale(1.15);
+      background-color: rgba(255, 0, 0, 0.4);
       box-shadow: 0px 0px 10px rgba(255, 0, 0, 0.8);
-      background-image: linear-gradient(to bottom, rgba(255, 0, 0, 0.8), rgba(255, 55, 55, 0.8));
     }
-    .nav-option:active {
-      color: #ff3737;
-      text-shadow: 0px 0px 15px rgba(255, 55, 55, 0.8);
-      background-color: rgba(255, 55, 55, 0.4);
-      border-radius: 5px;
-      padding: 10px;
-      box-shadow: 0px 0px 10px rgba(255, 55, 55, 0.8);
-    }
+    
     .nav-option.active {
       color: #ff3737;
       text-shadow: 0px 0px 15px rgba(255, 55, 55, 0.8);
       background-color: rgba(255, 55, 55, 0.4);
-      border-radius: 5px;
-      padding: 10px;
       box-shadow: 0px 0px 10px rgba(255, 55, 55, 0.8);
     }
+    
+    .toggle-button {
+      position: fixed;
+      top: 50%;
+      left: 70px;
+      transform: translate(0, -50%);
+      font-size: 30px;
+      color: white;
+      cursor: pointer;
+    }
+    
+    .toggle-button.closed {
+      left: 0;
+    }
+    
     .header-container {
       position: absolute;
-      top: 50%;
+      top: 40%;
       left: 50%;
       transform: translate(-50%, -50%);
       text-align: center;
       display: flex;
       flex-direction: column;
       align-items: center;
+      background-color: rgba(0, 0, 0, 0.5);
+      padding: 20px;
+      border-radius: 20px;
+      box-shadow: 0px 0px 10px rgba(255, 0, 0, 0.8);
+      transition: all 0.5s ease-in-out;
     }
+    
     .header-text {
-      font-size: 100px;
-      font-family: 'Poppins';
-      color: #000000;
+      font-size: 80px;
+      color: #fef8f8;
+      text-shadow: 0px 0px 15px rgba(255, 55, 55, 0.8);
       margin-bottom: 20px;
     }
     .searchbox {
       width: 400px;
       height: 60px;
-      background: #FF000;
-      border-radius: 5px;
+      background: transparent;
+      border-radius: 10px;
       margin: auto;
-      border: 2px black solid;
       display: flex;
       justify-content: center;
       align-items: center;
+      border: 1px solid rgba(255, 0, 0, 0.5);
+      transition: width 0.5s;
     }
-    .search {
+    
+    .searchbox.expanded {
+      width: 600px;
+    }
+    
+    .search    {
       width: 300px;
-      height: 57px;
-      border-radius: 5px;
+      height:      57px;
+      border-radius: 10px;
       background: transparent;
       border: none;
-      color: red;
-      font-size: 18px;
+      color: rgb(205, 205, 205);
+      font-size: 20px;
       outline: none;
       margin-left: 10px;
+      padding: 10px;
     }
+    
     ::placeholder {
-      color: red;
+      color: rgb(205, 205, 205);
       font-size: 18px;
       border: none;
     }
+    
     .submit-button {
       background: transparent;
       border: none;
       width: 55px;
       height: 60px;
-      color: red;
+      color: rgb(205, 205, 205);
       margin-left: 5px;
     }
+    
+    #CREDIT-DO-NOT-REMOVE {
+      position: fixed;
+      bottom: 5px;
+      color: white;
+      left: calc(50% - 190px);
+    }
   </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" />
 </head>
 <body>
+  <div class="toggle-button" onclick="toggleNavbar()">&gt;</div>
   <nav class="navbar">
-    <a href="home.html"><img src="apex.png" class="logo" alt="Apex Logo"></a>
     <div class="nav-options">
-      <a href="/" class="nav-option"><i class="home-icon fa fa-house-user fa-2xl fa-fw"></i>Home</a>
-      <a href="/games.html" class="nav-option"><i class="games-icon fa fa-gamepad fa-2xl fa-fw"></i>Games</a>
-      <a href="/settings" class="nav-option"><i class="settings-icon fa fa-gear fa-2xl fa-fw"></i>Settings</a>
-      <a href="/chat" class="nav-option"><i class="chat-icon fa fa-message fa-2xl fa-fw"></i>Chat</a>
-      <a href="/movies" class="nav-option"><i class="movies-icon fa-solid fa-clapperboard fa-2xl fa-fw"></i>Movies</a>
-      <a href="/proxy" class="nav-option"><i class="search-icon fa-solid fa-magnifying-glass fa-2xl fa-fw"></i>Proxy</a>
-      <a href="/darkweb" class="nav-option"><i class="darkweb-icon fa-solid fa-lock fa-2xl fa-fw"></i>Darkweb</a>
+      <a href="home.html" class="nav-option active"><i class="home-icon fa fa-house-user fa-2xl fa-fw"></i></a>
+      <a href="games.html" class="nav-option"><i class="games-icon fa fa-gamepad fa-2xl fa-fw"></i></a>
+      <a href="settings.html" class="nav-option"><i class="settings-icon fa fa-gear fa-2xl fa-fw"></i></a>
+      <center>
+        <a href="home.html" class="nav-option_logo"><img src="apex.png" height="40px" alt="Apex Logo"></a>
+      </center>
+      <a href="/chat" class="nav-option"><i class="chat-icon fa fa-message fa-2xl fa-fw"></i></a>
+      <a href="/proxy" class="nav-option"><i class="search-icon fa-solid fa-magnifying-glass fa-2xl fa-fw"></i></a>
+      <a href="/darkweb" class="nav-option"><i class="darkweb-icon fa-solid fa-lock fa-2xl fa-fw"></i></a>
     </div>
   </nav>
   <div class="header-container">
     <h1 class="header-text">APEX</h1>
     <div class="searchbox">
       <form>
-              <input type="search" class="search" placeholder="Search...">
+        <input type="search" class="search" placeholder="Search...">
         <button type="submit" class="submit-button"><i class="fas fa-search searchicon"></i></button>
       </form>
     </div>
   </div>
+
+  <p id="CREDIT-DO-NOT-REMOVE">Website by Apex Network, CSS by the Glitch Network </p>
+
   <canvas id="canvas"></canvas>
-  <script src="script.js"></script>
+  <script src="red.js"></script>
+  <script>
+    function toggleNavbar() {
+      document.querySelector('.navbar').classList.toggle('closed');
+      document.querySelector('.toggle-button').classList.toggle('closed');
+      if (document.querySelector('.toggle-button').classList.contains('closed')) {
+        document.querySelector('.toggle-button').innerHTML = '&gt;';
+      } else {
+        document.querySelector('.toggle-button').innerHTML = '&lt;';
+      }
+    }
+    
+    document.querySelector('.searchbox').addEventListener('click', function() {
+      document.querySelector('.searchbox').classList.add('expanded');
+    });
+    
+    document.addEventListener('click', function(event) {
+      if (!document.querySelector('.searchbox').contains(event.target)) {
+        document.querySelector('.searchbox').classList.remove('expanded');
+      }
+    });
+    
+    // Apply theme changes
+    const themeSelect = localStorage.getItem('theme');
+    if (themeSelect) {
+      if (themeSelect === 'default') {
+        document.body.style.background = 'linear-gradient(to bottom, #660000, #000000)';
+      } else if (themeSelect === 'hacker') {
+        document.body.style.background = 'linear-gradient(to bottom, #000000, #333333)';
+      } else if (themeSelect === 'ocean') {
+        document.body.style.background = 'linear-gradient(to bottom, #0000ff, #33ccff)';
+      } else if (themeSelect === 'gamer') {
+        document.body.style.background = 'linear-gradient(to bottom, #ff0000, #ff9900)';
+      } else if (themeSelect === 'sunset') {
+        document.body.style.background = 'linear-gradient(to bottom, #ff9900, #ffcc00)';
+      } else if (themeSelect === 'midnight') {
+            document.body.style.background = 'linear-gradient(to bottom, #000000, #333333)';
+      }
+    }
+  </script>
 </body>
-</html>
+</html>    
