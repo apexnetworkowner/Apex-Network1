@@ -1,0 +1,18 @@
+/* Default theme styles */
+body {
+    background: linear-gradient(135deg, #000000, #660000);
+    color: #ff0000;
+}
+.navbar {
+    background-color: rgba(0, 0, 0, 0.8);
+}
+.header-container {
+    background: rgba(0, 0, 0, 0.8);
+}
+.searchbox {
+    background: rgba(255, 0,  0, 0.1);
+    color: #ff0000;
+}
+.submit-button {
+    color: #ff0000;
+}
