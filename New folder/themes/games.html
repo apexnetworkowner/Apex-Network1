@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>APEX NETWORK</title>
+    <meta name="description" content="skibdi." />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" />
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #000000, #660000);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+            color: #ff0000;
+            transition: background 0.5s;
+        }
+
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 80px;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: left 0.5s;
+            border-radius: 10px; 
+            box-shadow: 0 0 30px rgba(255, 0, 0, 1);
+            z-index: 1000;
+        }
+
+        .navbar.closed {
+            left: -80px;
+        }
+
+        .nav-options {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+        }
+
+        .nav-option {
+            text-decoration: none;
+            width: 100%;
+            height: max-content;
+            color: #ff0000;
+            margin-bottom: 10px;
+            transition: all 0.3s ease-in-out;
+            border-radius: 10px;
+            padding: 15px;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .nav-option:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 25px rgba(255, 0, 0, 1);
+        }
+
+        .toggle-button {
+            position: fixed;
+            top: 50%;
+            left: 80px;
+            transform: translate(0, -50%);
+            font-size: 30px;
+            color: #ff0000;
+            cursor: pointer;
+            background-color: rgba(0, 0, 0, 0.4);
+            border-radius: 10px;
+            padding: 10px;
+            box-shadow: 0 0 15px rgba(255, 0, 0, 1);
+            transition: transform 0.3s;
+            z-index: 1000;
+        }
+
+        .toggle-button.closed {
+            left: 0;
+        }
+
+        #app_container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 20px;
+            gap: 20px;
+            padding: 20px;
+            margin-left: 100px;
+        }
+
+        #app {
+            width: 150px;
+            height: 150px;
+            margin: 10px;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+            border-radius: 10px;
+            transition: all 0.3s ease; display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        #app:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 25px rgba(255, 0, 0, 1);
+        }
+    </style>
+</head>
+<body>
+    <div class="toggle-button" onclick="toggleNavbar()">&gt;</div>
+    <nav class="navbar">
+        <div class="nav-options">
+            <a href="index.html" class="nav-option active"><i class="home-icon fa fa-house-user fa-2xl fa-fw"></i></a>
+            <a href="games.html" class="nav-option"><i class="games-icon fa fa-gamepad fa-2xl fa-fw"></i></a>
+            <a href="settings.html" class="nav-option"><i class="settings-icon fa fa-gear fa-2xl fa-fw"></i></a>
+            <a href="index.html" class="nav-option_logo"><img src="apex.png" height="40px" alt="Apex Logo"></a>
+            <a href="/chat" class="nav-option"><i class="chat-icon fa fa-message fa-2xl fa-fw"></i></a>
+            <a href="/proxy" class="nav-option"><i class="search-icon fa-solid fa-magnifying-glass fa-2xl fa-fw"></i></a>
+            <a href="/darkweb" class="nav-option"><i class="darkweb-icon fa-solid fa-lock fa-2xl fa-fw"></i></a>
+        </div>
+    </nav>
+    <div id="app_container">
+        <!-- Discord -->
+        <div id="app" onclick="window.location.href = './launch.html?url=discord.com'">
+            <img src="data:image/png;base64,[Discord logo base64]"/>
+            <div>Discord</div>
+        </div>
+    
+        <!-- YouTube -->
+        <div id="app" onclick="window.location.href = './launch.html?url=youtube.com'">
+            <img src="data:image/png;base64,[YouTube logo base64]"/>
+            <div>YouTube</div>
+        </div>
+    
+        <!-- Chess.com -->
+        <div id="app" onclick="window.location.href = './launch.html?url=chess.com'">
+            <img src="data:image/png;base64,[Chess.com logo base64]"/>
+            <div>Chess.com</div>
+        </div>
+    
+        <!-- TikTok -->
+        <div id="app" onclick="window.location.href = './launch.html?url=https://tiktok.com'">
+            <img src="data:image/png;base64,[TikTok logo base64]"/>
+            <div>TikTok</div>
+        </div>
+    
+        <!-- Twitter -->
+        <div id="app" onclick="window.location.href = './launch.html?url=https://twitter.com'">
+            <img src="data:image/png;base64,[Twitter logo base64]"/>
+            <div>Twitter</div>
+        </div>
+    
+        <!-- Y8 Games -->
+        <div id="app" onclick="window.location.href = './launch.html?url=https://www.y8.com'">
+            <img src="data:image/png;base64,[Y8 logo base64]"/>
+            <div>Y8 Games</div>
+        </div>
+    
+        <!-- Character.AI -->
+        <div id="app" onclick="window.location.href = './launch.html?url=https://www.character.ai'">
+            <img src="data:image/png;base64,[Character.AI logo base64]"/>
+            <div>Character.AI</div>
+        </div>
+    
+        <!-- GitHub -->
+        <div id="app" onclick="window.location.href = './launch.html?url=https://github.com'">
+            <img src="data:image/png;base64,[GitHub logo base64]"/>
+            <div>Github</div>
+        </div>
+    
+        <div id="app" onclick="window.location.href = './launch.html?url=https://play.geforcenow.com/mall/'">
+            <img src="data:image/png;base64,[GeForce Now logo base64]"/>
+            <div>Geforce Now</div>
+        </div>
+
+        <div id="app" category="Game --" onclick="window.location.href = './launch.html?url=https://pizzatower.io'">
+            <img src="data:image/png;base64,[Pizza Tower logo base64]"/>
+            <div>Pizza Tower</div>
+        </div>
+    
+        <div id="app" category="Game --" onclick="window.location.href = './launch.html?url=https://monkeytype.com'">
+            <img src="data:image/png;base64,[MonkeyType logo base64]"/>
+            <div>MonkeyType</div>
+        </div>
+    
+        <!-- Teachable Machine -->
+        <div id="app" category="A.I. --" onclick="window.location.href = './launch.html?url=https://teachablemachine.withgoogle.com/'">
+            <img src="data:image/png;base64,[Teachable Machine logo base64]"/>
+            <div>Teachable Machine</div>
+        </div>
+    
+        <!-- HuggingFace Chat -->
+        <div id="app" category="A.I. --" onclick="window.location.href = './launch.html?url=https:// huggingface.co/chat'">
+            <img src="data:image/png;base64,[HuggingFace logo base64]"/>
+            <div>HuggingFace Chat</div>
+        </div>
+    </div>
+    <script>
+        function toggleNavbar() {
+            document.querySelector('.navbar').classList.toggle('closed');
+            document.querySelector('.toggle-button').classList.toggle('closed');
+            if (document.querySelector('.toggle-button').classList.contains('closed')) {
+                document.querySelector('.toggle-button').innerHTML = '&gt;';
+            } else {
+                document.querySelector('.toggle-button').innerHTML = '&lt;';
+            }
+        }
+    </script>
+    <canvas id="canvas"></canvas>
+    <script src="red.js"></script>
+</body>
+</html>
