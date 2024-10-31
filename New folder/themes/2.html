@@ -109,8 +109,6 @@
             background: #cc0000;
             box-shadow: 0 0 15px rgba(255, 0, 0, 0.7);
         }
-
-        /* Scrollbar styling */
         ::-webkit-scrollbar {
             width: 8px;
         }
@@ -169,8 +167,6 @@
  const messageInput = document.getElementById('message-input');
         const sendButton = document.getElementById('send-button');
         const chatMessages = document.getElementById('chat-messages');
-
-        // Store conversation history
         let conversationHistory = [{
             role: "assistant",
             content: "Hello! I'm APEX AI. How can I assist you today?"
@@ -235,34 +231,28 @@
         async function handleSend() {
             const message = messageInput.value.trim();
             if (message) {
-                // Disable input and button while processing
                 messageInput.disabled = true;
                 sendButton.disabled = true;
-
-                // Add user message
                 addMessage(message, true);
                 messageInput.value = '';
 
-                // Add to conversation history
                 conversationHistory.push({
                     role: "user",
                     content: message
                 });
 
-                // Show typing indicator
+     
                 addTypingIndicator();
 
                 try {
-                    // Get AI response
+                  
                     const aiResponse = await getAIResponse(message);
                     
-                    // Remove typing indicator
+
                     removeTypingIndicator();
 
-                    // Add AI response to chat
                     addMessage(aiResponse, false);
 
-                    // Add to conversation history
                     conversationHistory.push({
                         role: "assistant",
                         content: aiResponse

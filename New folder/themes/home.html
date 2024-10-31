@@ -18,13 +18,23 @@
             color: #ff0000;
             transition: background 0.5s;
         }
-
+        #theme-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+        
         @keyframes gradient {
             0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
             100% { background-position: 0% 50%; }
         }
 
+    
         .navbar {
             position: fixed;
             top: 0;
@@ -159,33 +169,81 @@
             color: #ff0000;
             margin-left: 5px;
         }
-    </style>
+        :root {
+    --theme-color: #ff0000;
+    --theme-color-transparent: rgba(255, 0, 0, 0.1);
+}
+
+.navbar {
+    box-shadow: 0 0 30px var(--theme-color);
+}
+
+.nav-option {
+    color: var(--theme-color);
+}
+
+.nav-option:hover {
+    box-shadow: 0 0 25px var(--theme-color);
+}
+
+.toggle-button {
+    color: var(--theme-color);
+    box-shadow: 0 0 15px var(--theme-color);
+}
+
+.header-container {
+    box-shadow: 0 0 30px var(--theme-color);
+}
+
+.header-text {
+    color: var(--theme-color);
+    text-shadow: 0 0 25px var(--theme-color);
+}
+
+.searchbox {
+    background: var(--theme-color-transparent);
+    border: 1px solid var(--theme-color);
+}
+
+.search {
+    color: var(--theme-color);
+}
+
+.search::placeholder {
+    color: var(--theme-color);
+}
+
+.submit-button {
+    color: var(--theme-color);
+}
+ </style>
 </head>
 <body>
-    <div class="toggle-button" onclick="toggleNavbar()">&gt;</div>
-    <nav class="navbar">
-        <div class="nav-options">
-            <a href="index.html" class="nav-option active"><i class="home-icon fa fa-house-user fa-2xl fa-fw"></i></a>
-            <a href="games.html" class="nav-option"><i class="games-icon fa fa-gamepad fa-2xl fa-fw"></i></a>
-            <a href="settings.html" class="nav-option"><i class="settings-icon fa fa-gear fa-2xl fa-fw"></i></a>
-            <a href="index.html" class="nav-option_logo"><img src="apex.png" height="40px" alt="Apex Logo"></a>
-            <a href="/chat" class="nav-option"><i class="chat-icon fa fa-message fa-2xl fa-fw"></i></a>
-            <a href="/proxy" class="nav-option"><i class="search-icon fa-solid fa-magnifying-glass fa-2xl fa-fw"></i></a>
-            <a href="/darkweb" class="nav-option"><i class="darkweb-icon fa-solid fa-lock fa-2xl fa-fw"></i></a>
+    <canvas id="theme-canvas"></canvas>
+    <body>
+        <div class="toggle-button" onclick="toggleNavbar()">&gt;</div>
+        <nav class="navbar">
+            <div class="nav-options">
+                <a href="index.html" class="nav-option active"><i class="home-icon fa fa-house-user fa-2xl fa-fw"></i></a>
+                <a href="games.html" class="nav-option"><i class="games-icon fa fa-gamepad fa-2xl fa-fw"></i></a>
+                <a href="settings.html" class="nav-option"><i class="settings-icon fa fa-gear fa-2xl fa-fw"></i></a>
+                <a href="index.html" class="nav-option_logo"><img src="apex.png" height="40px" alt="Apex Logo"></a>
+                <a href="/chat" class="nav-option"><i class="chat-icon fa fa-message fa-2xl fa-fw"></i></a>
+                <a href="/proxy" class="nav-option"><i class="search-icon fa-solid fa-magnifying-glass fa-2xl fa-fw"></i></a>
+                <a href="/darkweb" class="nav-option"><i class="darkweb-icon fa-solid fa-lock fa-2xl fa-fw"></i></a>
+            </div>
+        </nav>
+        <div class="header-container">
+            <h1 class="header-text">APEX</h1>
+            <div class="searchbox">
+                <form id="uv-form">
+                    <input id="uv-search-engine" value="https://www.google.com/search?q=%s" type="hidden">
+                    <input id="uv-address" type="text" class="search" placeholder="Enter a URL or Search">
+                    <button type="submit" class="submit-button"><i class="fas fa-search searchicon"></i></button>
+                </form>
+            </div>
         </div>
-    </nav>
-    <div class="header-container">
-        <h1 class="header-text">APEX</h1>
-        <div class="searchbox">
-            <form id="uv-form">
-                <input id="uv-search-engine" value="https://www.google.com/search?q=%s" type="hidden">
-                <input id="uv-address" type="text" class="search" placeholder="Enter a URL or Search">
-                <button type="submit" class="submit-button"><i class="fas fa-search searchicon"></i></button>
-            </form>
-        </div>
-    </div>
-    <canvas id="canvas"></canvas>
-    <script src="red.js"></script>
+    <script src="themes.js"></script>
     <script>
         function toggleNavbar() {
             document.querySelector('.navbar').classList.toggle('closed');
@@ -210,5 +268,14 @@
     <script src="/uv/uv.bundle.js"></script>
     <script src="/uv/uv.config.js"></script>
     <script src="/assets/js/index.js"></script>
+    <canvas id="canvas"></canvas>
+    <script src="red.js"></script>
+    <script>
+        function updateCSSVariables(themeColor) {
+    document.documentElement.style.setProperty('--theme-color', themeColor);
+    document.documentElement.style.setProperty('--theme-color-transparent', `${themeColor}1a`); // 1a = 10% opacity
+}
+updateCSSVariables(themeColor);
+    </script>
 </body>
 </html>

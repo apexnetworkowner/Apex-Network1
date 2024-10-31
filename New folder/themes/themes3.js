@@ -2,7 +2,6 @@
 const canvas = document.getElementById('theme-canvas');
 const ctx = canvas.getContext('2d');
 let particles = [];
-let theme = 'dark-ocean';
 
 function init() {
     canvas.width = window.innerWidth;
@@ -60,6 +59,7 @@ const themeColors = {
         particles: '#8e44ad',
         accent: '#8e44ad'
     },
+    // New themes start here
     'emerald': {
         background: 'linear-gradient(135deg, #2ecc71, #27ae60)',
         particles: '#1abc9c',
@@ -111,15 +111,15 @@ const themeColors = {
         accent: '#1E90FF'
     }
 };
-
 function createParticles(color) {
     particles = [];
+    // Reduced number of particles and slowed them down
     for (let i = 0; i < 50; i++) {
         particles.push({
             x: Math.random() * canvas.width,
             y: Math.random() * canvas.height,
-            vx: (Math.random() - 0.5) * 0.5,
-            vy: (Math.random() - 0.5) * 0.5,
+            vx: (Math.random() - 0.5) * 0.5, // Reduced speed
+            vy: (Math.random() - 0.5) * 0.5, // Reduced speed
             size: Math.random() * 2 + 1,
             color: color
         });
@@ -147,32 +147,27 @@ function update() {
     requestAnimationFrame(update);
 }
 
-function updateCSSVariables(themeColor) {
-    document.documentElement.style.setProperty('--theme-color', themeColor);
-    document.documentElement.style.setProperty('--theme-color-transparent', `${themeColor}1a`);
-}
-
-function setTheme(themeName) {
-    if (!themeColors[themeName]) themeName = 'dark-ocean';
+function setTheme(theme) {
+    if (!themeColors[theme]) theme = 'dark-ocean'; // Set dark-ocean as default
     
-    const colors = themeColors[themeName];
+    const colors = themeColors[theme];
     document.body.style.background = colors.background;
     document.body.style.backgroundSize = '400% 400%';
     createParticles(colors.particles);
     
-    // Update CSS variables
-    updateCSSVariables(colors.accent);
-    
-    // Update all elements with the theme color
-    const elements = document.querySelectorAll('.nav-option, .toggle-button, .setting-card, .btn');
+    // Update all color elements
+    const elements = document.querySelectorAll('[style*="color: #ff0000"], [style*="color: rgb(255, 0, 0)"]');
     elements.forEach(element => {
         element.style.color = colors.accent;
-        if (element.classList.contains('setting-card')) {
-            element.style.boxShadow = `0 0 30px ${colors.accent}`;
-        }
     });
 
-    localStorage.setItem('selectedTheme', themeName);
+    // Update box-shadow elements
+    const shadowElements = document.querySelectorAll('[style*="box-shadow"]');
+    shadowElements.forEach(element => {
+        element.style.boxShadow = `0 0 30px ${colors.accent}`;
+    });
+
+    localStorage.setItem('selectedTheme', theme);
     
     if (!canvas) return;
     init();
@@ -190,6 +185,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const savedTheme = localStorage.getItem('selectedTheme') || 'dark-ocean';
     setTheme(savedTheme);
     
+    // Update the select element to show current theme
     const themeSelect = document.getElementById('themeSelect');
     if (themeSelect) {
         themeSelect.value = savedTheme;

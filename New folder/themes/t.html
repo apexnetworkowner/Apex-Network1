@@ -11,13 +11,19 @@
             margin: 0;
             padding: 0;
             font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, #000000, #660000);
-            background-size: 400% 400%;
-            animation: gradient 15s ease infinite;
-            color: #ff0000;
+            color: #ffffff;
             transition: background 0.5s;
         }
 
+        #theme-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
         @keyframes gradient {
             0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
@@ -151,15 +157,8 @@
             margin-top: 20px;
             text-shadow: 0 0 10px rgba(255, 0, 0, 0.7);
         }
-        canvas#theme-canvas {
-         position: fixed;
-         top: 0;
-         left: 0;
-         width: 100%;
-         height: 100%;
-         z-index: 1;
-         pointer-events: none;
-    }
+        /* Keep your existing CSS styles for navbar, containers, etc. */
+        
     </style>
 </head>
 <body>
@@ -184,37 +183,24 @@
                 <p>Update your account information and preferences.</p>
                 <button class="btn" onclick="manageAccount()">Manage Account</button>
             </div>
-            
+
+    <div class="settings-container">
+        <h1>APEX NETWORK SETTINGS</h1>
+        <div class="settings-grid">
             <div class="setting-card">
                 <h2>Theme</h2>
                 <p>Choose your preferred theme.</p>
-                <select id="themeSelect" onchange="changeTheme()">
-                    <option value="dark-ocean">Dark Ocean</option>
-                    <option value="fire">Fire</option>
-                    <option value="forest">Forest</option>
-                    <option value="neon">Neon</option>
-                    <option value="galaxy">Galaxy</option>
-                    <option value="cyber">Cyber</option>
-                    <option value="sunset">Sunset</option>
+                <select id="themeSelect" onchange="setTheme(this.value)">
                     <option value="coffee">Coffee</option>
+                    <option value="fire">Fire</option>
                     <option value="ocean">Ocean</option>
+                    <option value="sunset">Sunset</option>
+                    <option value="galaxy">Galaxy</option>
+                    <option value="forest">Forest</option>
                     <option value="mountain">Mountain</option>
                     <option value="night">Night</option>
                     <option value="purple">Purple</option>
-                    <option value="emerald">Emerald</option>
-                    <option value="cherry-blossom">Cherry Blossom</option>
-                    <option value="arctic">Arctic</option>
-                    <option value="desert">Desert</option>
-                    <option value="autumn">Autumn</option>
-                    <option value="pastel">Pastel</option>
-                    <option value="volcano">Volcano</option>
-                    <option value="deep-space">Deep Space</option>
-                    <option value="rainbow">Rainbow</option>
-                    <option value="matrix">Matrix</option>
-                    <option value="bubblegum">Bubblegum</option>
-                    <option value="steampunk">Steampunk</option>
-                    <option value="underwater">Underwater</option>
-                    <option value="retro">Retro</option>
+                    <option value="dark-ocean">Dark Ocean</option>
                 </select>
             </div>
             <div class="setting-card">
@@ -241,36 +227,17 @@
             </div>
         </div>
     </div>
+        </div>
+    </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/red@1.3.2/dist/red.min.js"></script>
+    <script src="themes.js"></script>
     <script>
-        function manageAccount() {
-            // Add your account management logic here
-            alert('Manage Account functionality to be implemented');
-        }
-
-        function configurePrivacy() {
-            // Add your privacy configuration logic here
-            alert('Privacy Configuration functionality to be implemented');
-        }
-
-        function configureProxy() {
-            // Add your proxy configuration logic here
-            alert('Proxy Configuration functionality to be implemented');
-        }
-
-        function optimizePerformance() {
-            // Add your performance optimization logic here
-            alert('Performance Optimization functionality to be implemented');
-        }
-
-        function manageNotifications() {
-            // Add your notification management logic here
-            alert('Notification Management functionality to be implemented');
-        }
-        // Add this near the top of your script section
-             // Add this near the top of your script section
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedTheme = localStorage.getItem('selectedTheme') || 'coffee';
+            if (document.getElementById('themeSelect')) {
+                document.getElementById('themeSelect').value = savedTheme;
+            }
+        });
     </script>
- <script src="themes.js"></script>
 </body>
 </html>
