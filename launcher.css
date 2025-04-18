@@ -1,0 +1,39 @@
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #111;
+  padding: 15px 30px;
+  border-bottom: 1px solid #ff3c3c;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 10;
+}
+
+.navbar .logo {
+  font-size: 1.5em;
+  color: #ff3c3c;
+  font-weight: bold;
+  text-shadow: 0 0 5px #ff3c3c;
+}
+
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 20px;
+}
+
+.nav-links a {
+  color: #ff3c3c;
+  text-decoration: none;
+  transition: 0.3s;
+}
+
+.nav-links a:hover {
+  text-shadow: 0 0 10px #ff3c3c;
+}
+
+.container {
+  padding-top: 130px; /* Adjusted to prevent overlap with navbar */
+}
