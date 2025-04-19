@@ -1,45 +1,1150 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>APEX Launcher</title>
-  <link rel="stylesheet" href="launcher.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apex Proxy</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: background-color 0.3s, border-color 0.3s, color 0.3s, box-shadow 0.3s;
+        }
+
+        body, html {
+            font-family: 'Inter', sans-serif;
+            height: 100%;
+            width: 100%;
+            overflow-x: hidden;
+            background-color: #000;
+            color: #fff;
+        }
+
+        #app {
+            min-height: 100vh;
+            position: relative;
+            overflow: hidden;
+            transition: background-color 0.5s;
+        }
+
+        /* Canvas backgrounds */
+        .background-canvas,
+        .particles-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            transition: opacity 0.5s;
+        }
+
+        .background-canvas {
+            z-index: 0;
+        }
+
+        .particles-canvas {
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        /* Mobile menu button */
+        .mobile-menu-btn {
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            z-index: 50;
+            padding: 0.5rem;
+            border-radius: 0.75rem;
+            background-color: rgba(0, 0, 0, 0.8);
+            border: none;
+            cursor: pointer;
+            display: none;
+        }
+
+        .menu-icon {
+            width: 1.5rem;
+            height: 1.5rem;
+        }
+
+        /* Navigation */
+        .mobile-nav {
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            width: 16rem;
+            z-index: 40;
+            backdrop-filter: blur(16px);
+            border-right: 1px solid;
+            display: flex;
+            flex-direction: column;
+            padding: 1rem;
+            gap: 0.5rem;
+            transform: translateX(-100%);
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .mobile-nav.visible {
+            transform: translateX(0);
+        }
+
+        .desktop-nav {
+            position: fixed;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 5rem;
+            backdrop-filter: blur(16px);
+            border-right: 1px solid;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem 0;
+            gap: 1rem;
+            z-index: 40;
+            transition: all 0.3s;
+        }
+
+        .desktop-nav.horizontal {
+            width: 100%;
+            height: 4rem;
+            flex-direction: row;
+            justify-content: center;
+            padding: 0;
+            border-right: none;
+            border-bottom: 1px solid;
+        }
+
+        .nav-item {
+            padding: 0.75rem;
+            border-radius: 0.75rem;
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            cursor: pointer;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+
+        .nav-item:hover {
+            transform: scale(1.05);
+        }
+
+        .nav-item:active {
+            transform: scale(0.95);
+        }
+
+        .nav-item-bg {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .nav-item:hover .nav-item-bg {
+            opacity: 1;
+        }
+
+        .nav-icon {
+            width: 1.25rem;
+            height: 1.25rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        .nav-label {
+            font-size: 0.875rem;
+            font-weight: 500;
+            position: relative;
+            z-index: 10;
+            transition: color 0.3s;
+        }
+
+        .nav-tooltip {
+            position: absolute;
+            left: 100%;
+            margin-left: 0.75rem;
+            padding: 0.375rem 0.75rem;
+            border-radius: 0.5rem;
+            font-size: 0.75rem;
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.3s;
+            backdrop-filter: blur(8px);
+            z-index: 20;
+            border: 1px solid;
+        }
+
+        .nav-item:hover .nav-tooltip {
+            opacity: 1;
+        }
+
+        /* Main content */
+        .main-content {
+            padding: 2rem;
+            position: relative;
+            min-height: 100vh;
+            transition: margin 0.3s;
+        }
+
+        .main-content.with-horizontal-nav {
+            margin-top: 4rem;
+        }
+
+        .main-content.with-vertical-nav {
+            margin-left: 5rem;
+        }
+
+        /* Page system */
+        .page {
+            display: none;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .page.active-page {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Settings button */
+        .settings-container {
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            display: flex;
+            gap: 1rem;
+        }
+
+        .settings-btn {
+            width: 3rem;
+            height: 3rem;
+            border-radius: 0.75rem;
+            backdrop-filter: blur(8px);
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .settings-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .settings-icon {
+            width: 1.5rem;
+            height: 1.5rem;
+        }
+
+        /* Content container */
+        .content-container {
+            max-width: 72rem;
+            margin: 5rem auto 0;
+        }
+
+        /* Title */
+        .title-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 4rem;
+            position: relative;
+        }
+
+        .title-glow {
+            position: absolute;
+            inset: 0;
+            filter: blur(48px);
+            opacity: 0.5;
+            mix-blend-mode: screen;
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        .title {
+            font-size: 5rem;
+            font-weight: 700;
+            letter-spacing: -0.05em;
+            mix-blend-mode: screen;
+            animation: float 6s ease-in-out infinite;
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+
+        /* Search */
+        .search-container {
+            position: relative;
+            max-width: 32rem;
+            margin: 0 auto;
+        }
+
+        .search-glow {
+            position: absolute;
+            inset: 0;
+            border-radius: 1rem;
+            filter: blur(16px);
+            opacity: 0.2;
+            transition: opacity 0.3s;
+        }
+
+        .search-container:hover .search-glow {
+            opacity: 0.3;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 1.5rem 1rem 1.5rem 3rem;
+            border-radius: 1rem;
+            backdrop-filter: blur(16px);
+            transition: all 0.3s;
+            border: 1px solid;
+            background-color: rgba(0, 0, 0, 0.5);
+            color: #fff;
+            font-size: 1rem;
+        }
+
+        .search-input:hover {
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+        }
+
+        .search-input:focus {
+            outline: none;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            transition: color 0.3s;
+        }
+
+        .search-recommendations {
+            position: absolute;
+            z-index: 50;
+            width: 100%;
+            margin-top: 0.5rem;
+            border-radius: 1rem;
+            backdrop-filter: blur(16px);
+            overflow: hidden;
+            border: 2px solid;
+        }
+
+        .recommendation-item {
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            transition: all 0.3s;
+        }
+
+        .recommendation-item:hover {
+            transform: translateX(0.25rem);
+        }
+
+        .recommendation-dot {
+            width: 0.5rem;
+            height: 0.5rem;
+            border-radius: 50%;
+            transition: background-color 0.3s;
+        }
+
+        /* Buttons */
+        .buttons-container {
+            margin-top: 2rem;
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        .contact-btn,
+        .about-btn {
+            padding: 1.5rem 2rem;
+            border-radius: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 500;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .contact-btn:hover,
+        .about-btn:hover {
+            transform: scale(1.05);
+            opacity: 0.9;
+        }
+
+        .mail-icon,
+        .globe-icon {
+            width: 1.25rem;
+            height: 1.25rem;
+        }
+
+        .about-btn {
+            backdrop-filter: blur(16px);
+            border: 2px solid;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .about-btn:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Settings dialog */
+        .settings-dialog {
+            position: fixed;
+            inset: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+
+        .settings-dialog.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .dialog-content {
+            max-width: 32rem;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            backdrop-filter: blur(16px);
+            border-radius: 1rem;
+            border: 1px solid;
+            padding: 1.5rem;
+            background-color: rgba(0, 0, 0, 0.8);
+            transform: scale(0.95);
+            transition: transform 0.3s;
+        }
+
+        .settings-dialog.visible .dialog-content {
+            transform: scale(1);
+        }
+
+        .dialog-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .dialog-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+
+        .close-dialog-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #fff;
+        }
+
+        .dialog-body {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .setting-group {
+            display: grid;
+            gap: 0.75rem;
+        }
+
+        .setting-label {
+            font-size: 1rem;
+            display: block;
+            margin-bottom: 0.75rem;
+        }
+
+        .theme-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.5rem;
+        }
+
+        .theme-btn {
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .theme-btn.active {
+            ring: 2px;
+        }
+
+        .theme-color {
+            width: 0.75rem;
+            height: 0.75rem;
+            border-radius: 50%;
+        }
+
+        .theme-name {
+            font-size: 0.75rem;
+        }
+
+        .setting-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        /* Switch */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 3rem;
+            height: 1.5rem;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(255, 255, 255, 0.1);
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 1rem;
+            width: 1rem;
+            left: 0.25rem;
+            bottom: 0.25rem;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: currentColor;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(1.5rem);
+        }
+
+        /* Games Page Styles */
+        .page-header {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        @media (min-width: 768px) {
+            .page-header {
+                flex-direction: row;
+                align-items: center;
+                justify-content: space-between;
+            }
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+
+        .page-subtitle {
+            opacity: 0.8;
+            margin-top: 0.5rem;
+        }
+
+        .search-small-container {
+            position: relative;
+            width: 100%;
+            max-width: 16rem;
+        }
+
+        .search-small {
+            width: 100%;
+            padding: 0.5rem 1rem 0.5rem 2.5rem;
+            border-radius: 0.75rem;
+            backdrop-filter: blur(16px);
+            border: 1px solid;
+            background-color: rgba(0, 0, 0, 0.5);
+            color: #fff;
+            font-size: 0.875rem;
+        }
+
+        .search-small:focus {
+            outline: none;
+        }
+
+        .search-small-icon {
+            position: absolute;
+            left: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 1rem;
+            height: 1rem;
+        }
+
+        .categories-container {
+            margin-bottom: 2rem;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .categories-scroll {
+            display: flex;
+            gap: 0.5rem;
+            padding-bottom: 0.5rem;
+        }
+
+        .category-btn {
+            padding: 0.5rem 1rem;
+            border-radius: 0.75rem;
+            white-space: nowrap;
+            transition: all 0.3s;
+            border: 1px solid transparent;
+            background-color: transparent;
+            color: #fff;
+            font-size: 0.875rem;
+            cursor: pointer;
+        }
+
+        .category-btn:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .category-btn.active {
+            border-color: currentColor;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .game-card {
+            border-radius: 1rem;
+            overflow: hidden;
+            backdrop-filter: blur(16px);
+            border: 1px solid;
+            background-color: rgba(0, 0, 0, 0.5);
+            transition: transform 0.3s;
+        }
+
+        .game-card:hover {
+            transform: translateY(-0.25rem) scale(1.02);
+        }
+
+        .game-image-container {
+            position: relative;
+            aspect-ratio: 16 / 9;
+        }
+
+        .game-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .game-overlay {
+            position: absolute;
+            inset: 0;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .game-card:hover .game-overlay {
+            opacity: 1;
+        }
+
+        .play-btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 500;
+            border: none;
+            cursor: pointer;
+            font-size: 0.875rem;
+        }
+
+        .game-info {
+            padding: 1rem;
+        }
+
+        .game-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+
+        .game-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+        }
+
+        .star-icon {
+            width: 1.25rem;
+            height: 1.25rem;
+        }
+
+        .game-meta {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 0.75rem;
+            opacity: 0.8;
+        }
+
+        .game-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .meta-icon {
+            width: 1rem;
+            height: 1rem;
+        }
+
+        /* Proxy Page Styles */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            padding: 1.5rem;
+            border-radius: 1rem;
+            backdrop-filter: blur(16px);
+            border: 1px solid;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .stat-icon-container {
+            padding: 0.75rem;
+            border-radius: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .stat-icon {
+            width: 1.5rem;
+            height: 1.5rem;
+        }
+
+        .stat-info {
+            flex: 1;
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            opacity: 0.8;
+        }
+
+        .stat-value {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .proxy-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        @media (min-width: 768px) {
+            .proxy-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .proxy-card {
+            padding: 1.5rem;
+            border-radius: 1rem;
+            backdrop-filter: blur(16px);
+            border: 1px solid;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .proxy-card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .proxy-card-content {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .proxy-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border-radius: 0.75rem;
+            backdrop-filter: blur(16px);
+            border: 1px solid;
+            background-color: rgba(0, 0, 0, 0.5);
+            color: #fff;
+            font-size: 1rem;
+        }
+
+        .proxy-input:focus {
+            outline: none;
+        }
+
+        .proxy-btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            font-weight: 500;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            width: 100%;
+        }
+
+        .proxy-btn:hover {
+            opacity: 0.9;
+        }
+
+        .proxy-btn-icon {
+            width: 1.25rem;
+            height: 1.25rem;
+        }
+
+        .proxy-setting {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+        }
+
+        .proxy-setting-info {
+            flex: 1;
+        }
+
+        .proxy-label {
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        .proxy-description {
+            font-size: 0.875rem;
+            opacity: 0.8;
+            margin-top: 0.25rem;
+        }
+
+        .proxy-select {
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            backdrop-filter: blur(16px);
+            border: 1px solid;
+            background-color: rgba(0, 0, 0, 0.5);
+            color: #fff;
+            font-size: 0.875rem;
+            width: 100%;
+            margin-top: 0.5rem;
+        }
+
+        .proxy-select:focus {
+            outline: none;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .feature-card {
+            padding: 1.5rem;
+            border-radius: 1rem;
+            backdrop-filter: blur(16px);
+            border: 1px solid;
+            background-color: rgba(0, 0, 0, 0.5);
+            transition: transform 0.3s, border-color 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: scale(1.02);
+        }
+
+        .feature-icon-container {
+            width: 3rem;
+            height: 3rem;
+            border-radius: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+
+        .feature-icon {
+            width: 1.5rem;
+            height: 1.5rem;
+        }
+
+        .feature-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .feature-description {
+            font-size: 0.875rem;
+            opacity: 0.8;
+        }
+
+        /* Utility classes */
+        .hidden {
+            display: none;
+        }
+
+        /* Animations */
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 0.5;
+                transform: scale(1) rotate(0deg);
+            }
+            50% {
+                opacity: 0.45;
+                transform: scale(0.98) rotate(1deg);
+            }
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) rotate(-1deg);
+            }
+            50% {
+                transform: translateY(-10px) rotate(1deg);
+            }
+        }
+
+        /* Media queries */
+        @media (max-width: 1024px) {
+            .desktop-nav {
+                display: none;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .main-content {
+                margin-left: 0 !important;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .title {
+                font-size: 3rem;
+            }
+            
+            .buttons-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .contact-btn, .about-btn {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .page-title {
+                font-size: 2rem;
+            }
+        }
+    </style>
 </head>
 <body>
-  <nav class="navbar">
-    <div class="logo">APEX</div>
-    <ul class="nav-links">
-      <li><a href="launcher.html">Home</a></li>
-      <li><a href="game-library.html">Games</a></li>
-      <li><a href="proxy.html">Proxy</a></li>
-      <li><a href="settings.html">Settings</a></li>
-    </ul>
-  </nav>
+    <div id="app">
+        <canvas id="particles-canvas" class="particles-canvas"></canvas>
+        
+        <!-- Sidebar Navigation -->
+        <div class="sidebar">
+            <div class="nav-item" data-page="home">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="nav-icon"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                <span class="nav-tooltip">Home</span>
+            </div>
+            <div class="nav-item" data-page="games">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="nav-icon"><path d="M6 11h4a1 1 0 0 0 1-1V8a1 1 0 0 0-1-1H6a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1z"></path><path d="M18 10h.01"></path><path d="M14 10h.01"></path><path d="M18 14h.01"></path><path d="M14 14h.01"></path><path d="M6 14h4a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-2a1 1 0 0 1 1-1z"></path><rect width="20" height="16" x="2" y="4" rx="2"></rect></svg>
+                <span class="nav-tooltip">Games</span>
+            </div>
+            <div class="nav-item" data-page="proxy">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="nav-icon"><circle cx="12" cy="12" r="10"></circle><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path><path d="M2 12h20"></path></svg>
+                <span class="nav-tooltip">Proxy</span>
+            </div>
+            <div class="nav-item" data-page="apps">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="nav-icon"><rect x="2" y="4" width="20" height="16" rx="2"></rect><path d="M10 4v4"></path><path d="M2 8h20"></path><path d="M6 12h.01"></path><path d="M10 12h.01"></path><path d="M14 12h.01"></path><path d="M18 12h.01"></path><path d="M6 16h.01"></path><path d="M10 16h.01"></path><path d="M14 16h.01"></path><path d="M18 16h.01"></path></svg>
+                <span class="nav-tooltip">Apps</span>
+            </div>
+            <div class="nav-item" data-page="about-blank">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="nav-icon"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" x2="21" y1="14" y2="3"></line></svg>
+                <span class="nav-tooltip">AB</span>
+            </div>
+        </div>
 
-  <div class="background"></div>
-  <div class="container">
-    <div class="clock" id="clock">--:--:--</div>
-    <div class="date" id="date">Loading date...</div>
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Settings Button -->
+            <button id="settings-btn" class="settings-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="settings-icon"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+            </button>
 
-    <input type="text" class="search" placeholder="Search or enter URL"/>
+            <!-- Pages -->
+            <div class="page active" id="home-page">
+                <h1 class="title">Apex Proxy</h1>
+                
+                <div class="search-container">
+                    <input type="text" id="search-input" class="search-input" placeholder="Enter a search query or URL">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="search-icon"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
+                    <div id="search-recommendations" class="search-recommendations hidden"></div>
+                </div>
+                
+                <div class="buttons-container">
+                    <button id="about-blank-btn" class="action-btn about-blank-btn">About Blank</button>
+                    <button id="discord-btn" class="action-btn discord-btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="discord-icon"><circle cx="9" cy="12" r="1"></circle><circle cx="15" cy="12" r="1"></circle><path d="M7.5 7.5c3.5-1 5.5-1 9 0"></path><path d="M7.5 16.5c3.5 1 5.5 1 9 0"></path><path d="M15.5 17c0 1 1.5 3 2 3 1.5 0 2.833-1.667 3.5-3 .667-1.667.5-5.833-1.5-11.5-1.457-1.015-3-1.34-4.5-1.5l-1 2.5"></path><path d="M8.5 17c0 1-1.356 3-1.832 3-1.429 0-2.698-1.667-3.333-3-.635-1.667-.476-5.833 1.428-11.5C6.151 4.485 7.545 4.16 9 4l1 2.5"></path></svg>
+                        Discord
+                    </button>
+                </div>
+            </div>
 
-    <div class="categories">
-      <button>Search</button>
-      <button>Social</button>
-      <button>Media</button>
-      <button>Development</button>
+            <div class="page" id="games-page">
+                <div class="page-content">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="page-icon"><path d="M6 11h4a1 1 0 0 0 1-1V8a1 1 0 0 0-1-1H6a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1z"></path><path d="M18 10h.01"></path><path d="M14 10h.01"></path><path d="M18 14h.01"></path><path d="M14 14h.01"></path><path d="M6 14h4a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-2a1 1 0 0 1 1-1z"></path><rect width="20" height="16" x="2" y="4" rx="2"></rect></svg>
+                    <h1 class="page-title">Games Page</h1>
+                    <p class="page-description">Coming soon...</p>
+                </div>
+            </div>
+
+            <div class="page" id="proxy-page">
+                <div class="page-content">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="page-icon"><circle cx="12" cy="12" r="10"></circle><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path><path d="M2 12h20"></path></svg>
+                    <h1 class="page-title">Proxy Page</h1>
+                    <p class="page-description">Coming soon...</p>
+                </div>
+            </div>
+
+            <div class="page" id="apps-page">
+                <div class="page-content">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="page-icon"><rect x="2" y="4" width="20" height="16" rx="2"></rect><path d="M10 4v4"></path><path d="M2 8h20"></path><path d="M6 12h.01"></path><path d="M10 12h.01"></path><path d="M14 12h.01"></path><path d="M18 12h.01"></path><path d="M6 16h.01"></path><path d="M10 16h.01"></path><path d="M14 16h.01"></path><path d="M18 16h.01"></path></svg>
+                    <h1 class="page-title">Apps Page</h1>
+                    <p class="page-description">Coming soon...</p>
+                </div>
+            </div>
+
+            <div class="page" id="about-blank-page">
+                <div class="page-content">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="page-icon"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" x2="21" y1="14" y2="3"></line></svg>
+                    <h1 class="page-title">About Blank</h1>
+                    <p class="page-description">Opening in a new tab...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings Dialog -->
+        <div id="settings-dialog" class="settings-dialog">
+            <div class="dialog-content">
+                <div class="dialog-header">
+                    <h2 class="dialog-title">Settings</h2>
+                    <button id="close-dialog-btn" class="close-dialog-btn">&times;</button>
+                </div>
+                <div class="dialog-body">
+                    <div class="setting-group">
+                        <label class="setting-label">Theme</label>
+                        <div class="theme-grid">
+                            <button class="theme-btn" data-theme="bloodMoon">
+                                <span class="theme-name">Blood Moon</span>
+                                <span class="theme-color" style="background-color: #ff0000;"></span>
+                            </button>
+                            <button class="theme-btn" data-theme="cyberOcean">
+                                <span class="theme-name">Cyber Ocean</span>
+                                <span class="theme-color" style="background-color: #00ffff;"></span>
+                            </button>
+                            <button class="theme-btn" data-theme="voidPurple">
+                                <span class="theme-name">Void Purple</span>
+                                <span class="theme-color" style="background-color: #9333ea;"></span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="setting-group">
+                        <div class="setting-item">
+                            <label class="setting-label">Auto Blank</label>
+                            <label class="switch">
+                                <input type="checkbox" id="auto-blank-switch">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="setting-item">
+                            <label class="setting-label">Anti Close</label>
+                            <label class="switch">
+                                <input type="checkbox" id="anti-close-switch">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <div class="bookmarks">
-      <div class="bookmark">Google</div>
-      <div class="bookmark">GitHub</div>
-      <div class="bookmark">YouTube</div>
-      <div class="bookmark">Reddit</div>
-      <div class="bookmark">+ Add</div>
-    </div>
-  </div>
-
-  <script src="launcher.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
